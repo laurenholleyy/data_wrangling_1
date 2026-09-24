@@ -162,3 +162,36 @@ litters_df =
 litters_df
 ```
 
+Load pups, clean names, drop missing, keep litter number and pd variables, add pd walk -7.
+
+```{r}
+pups_df = 
+  read_csv("data/FAS_pups.csv", skip = 3, na = c("NA", ".", "")) |>
+  janitor::clean_names() |>
+  drop_na() |>
+  select(starts_with("pd"), litter_number) |>
+  mutate(
+       pd_walk_minus_7 = pd_walk - 7)
+```
+
+i think he said he's linear regressing
+
+```{r}
+litters_df |>
+lm(gd18_weight ~ gd0_weight, data = _)
+```
+
+`select` vs `pull`
+
+```{r}
+litters_df |>
+  select(group)
+
+litters_df |>
+  pull(group)
+```
+
+never do `$`
+things like `litters_df$group`
+
+you can add the view statement to see it (don't add to r markdown) `view()`

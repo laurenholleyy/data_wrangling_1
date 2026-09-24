@@ -616,7 +616,7 @@ litters_df_clean
 
 still pretty hectic^
 
-basically `%>%` or `|>` is “and then”
+basically `%>%` or `|>` is “and then.” super cute comparatively
 
 ``` r
 litters_df = 
@@ -657,3 +657,77 @@ litters_df
     ## 10 mod7  #94/2               24.4        42.9          19               7
     ## # ℹ 21 more rows
     ## # ℹ 2 more variables: pups_dead_birth <dbl>, wt_gain <dbl>
+
+Load pups, clean names, drop missing, keep litter number and pd
+variables, add pd walk -7.
+
+``` r
+pups_df = 
+  read_csv("data/FAS_pups.csv", skip = 3, na = c("NA", ".", "")) |>
+  janitor::clean_names() |>
+  drop_na() |>
+  select(starts_with("pd"), litter_number) |>
+  mutate(
+       pd_walk_minus_7 = pd_walk - 7)
+```
+
+    ## Rows: 313 Columns: 6
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (1): Litter Number
+    ## dbl (5): Sex, PD ears, PD eyes, PD pivot, PD walk
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+i think he said he’s linear regressing
+
+``` r
+litters_df |>
+lm(gd18_weight ~ gd0_weight, data = _)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = gd18_weight ~ gd0_weight, data = litters_df)
+    ## 
+    ## Coefficients:
+    ## (Intercept)   gd0_weight  
+    ##      15.342        1.084
+
+`select` vs `pull`
+
+``` r
+litters_df |>
+  select(group)
+```
+
+    ## # A tibble: 31 × 1
+    ##    group
+    ##    <chr>
+    ##  1 con7 
+    ##  2 con7 
+    ##  3 con7 
+    ##  4 con7 
+    ##  5 mod7 
+    ##  6 mod7 
+    ##  7 mod7 
+    ##  8 mod7 
+    ##  9 mod7 
+    ## 10 mod7 
+    ## # ℹ 21 more rows
+
+``` r
+litters_df |>
+  pull(group)
+```
+
+    ##  [1] "con7" "con7" "con7" "con7" "mod7" "mod7" "mod7" "mod7" "mod7" "mod7"
+    ## [11] "mod7" "low7" "low7" "low7" "low7" "low7" "low7" "low7" "low7" "mod8"
+    ## [21] "mod8" "mod8" "mod8" "mod8" "low8" "low8" "low8" "low8" "low8" "low8"
+    ## [31] "low8"
+
+never do `$` things like `litters_df$group`
+
+you can add the view statement to see it (don’t add to r markdown)
+`view()`
