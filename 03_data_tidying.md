@@ -1,25 +1,23 @@
----
-title: "Data Tidying"
-output: github_document
----
+Data Tidying
+================
 
 This file is for doing data tidying!
 
-```{r message=FALSE}
+``` r
 library(tidyverse)
 ```
 
-## Let's tidy some data woo
+## Let’s tidy some data woo
 
-```{r}
+``` r
 pulse_df = 
   haven::read_sas("data/public_pulse_data.sas7bdat") |>
   janitor::clean_names()
 ```
 
-Let's tidy now!
+Let’s tidy now!
 
-```{r}
+``` r
 pulse_tidy_df =
   pulse_df |>
   pivot_longer(
@@ -37,7 +35,7 @@ Practice
 
 Import litters data; keep columns litter number and GD weights; and tidy
 
-```{r}
+``` r
 litters_df =
   read_csv("data/FAS_litters.csv", na = c("", "NA", ".")) |>
   janitor::clean_names() |>
@@ -56,9 +54,24 @@ litters_df =
   )
 ```
 
+    ## Rows: 49 Columns: 8
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (2): Group, Litter Number
+    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+    ## Warning: There was 1 warning in `mutate()`.
+    ## ℹ In argument: `gd = case_match(gd, "gd0_weight" ~ 0, "gd18_weight" ~ 18, )`.
+    ## Caused by warning:
+    ## ! `case_match()` was deprecated in dplyr 1.2.0.
+    ## ℹ Please use `recode_values()` instead.
+
 ## Deliberately Untidy Data
 
-```{r}
+``` r
 analysis_df = 
   tibble(
     groups = c("treatment", "treatment", "placebo", "placebo"),
@@ -67,9 +80,9 @@ analysis_df =
   )
 ```
 
-Let's untidy this dataset for human readability.
+Let’s untidy this dataset for human readability.
 
-```{r}
+``` r
 analysis_df |>
   pivot_wider(
     names_from = time,
@@ -78,11 +91,16 @@ analysis_df |>
   knitr::kable()
 ```
 
+| groups    | pre | post |
+|:----------|----:|-----:|
+| treatment | 4.0 |  8.0 |
+| placebo   | 3.5 |  4.6 |
+
 ## Bind some rows
 
 First, import each LOTR movie table
 
-```{r}
+``` r
 fellowship_df =
   readxl::read_excel("data/LotR_Words.xlsx", range = "B3:D6") |>
   mutate(movie = "fellowship")
@@ -98,7 +116,7 @@ return_df =
 
 Next, put all of these together and tidy.
 
-```{r}
+``` r
 lotr_df =
   bind_rows(fellowship_df, two_towers_df, return_df) |>
   janitor::clean_names() |>
@@ -109,4 +127,3 @@ lotr_df =
     values_to = "words"
   )
 ```
-
